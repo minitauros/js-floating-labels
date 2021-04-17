@@ -1,0 +1,19 @@
+{
+  "name": "floating-labels",
+  "version": "1.0.0",
+  "description": "Add float-label class to input elements if applicable",
+  "author": "Minitauros (Stephan Grasmeijer)",
+  "license": "MIT",
+  "repository": "https://github.com/minitauros/js-floating-labels",
+  "main": "build/index.js",
+  "types": "lib/index.d.ts",
+  "devDependencies": {
+    "typescript": "^4"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "build"
+  ]
+}
