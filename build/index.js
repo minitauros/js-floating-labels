@@ -1,12 +1,13 @@
-var floatLabelClass = 'float-label';
 var ranSetup = false;
+var formRowClass = 'form-row';
+export var floatLabelClass = 'float-label';
 /**
  * Sets up "floating labels", i.e. when a user focuses an input field a CSS class will be added indicating the label
  * may float.
  *
  * On blur it will remove the CSS class if the input contains no content.
  *
- * The setup will only run once per window load.
+ * The setup will only run once per window load, even if called multiple times.
  */
 export function setUpFloatingLabels() {
     if (ranSetup) {
@@ -25,12 +26,10 @@ export function setUpFloatingLabels() {
             && (e.target.constructor === HTMLInputElement
                 || e.target.constructor === HTMLSelectElement
                 || e.target.constructor === HTMLTextAreaElement)) {
-            var target = e.target;
-            var parent_1 = target.parentElement;
-            if (!parent_1) {
-                return;
+            var formRowElement = getParentByClassName(e.target, formRowClass);
+            if (formRowElement) {
+                formRowElement.classList.add(floatLabelClass);
             }
-            parent_1.classList.add(floatLabelClass);
         }
     });
     window.addEventListener('focusout', function (e) {
@@ -38,13 +37,9 @@ export function setUpFloatingLabels() {
             && (e.target.constructor === HTMLInputElement
                 || e.target.constructor === HTMLSelectElement
                 || e.target.constructor === HTMLTextAreaElement)) {
-            var target = e.target;
-            if (target.value === '') {
-                var parent_2 = target.parentElement;
-                if (!parent_2) {
-                    return;
-                }
-                parent_2.classList.remove(floatLabelClass);
+            var formRowElement = getParentByClassName(e.target, formRowClass);
+            if (formRowElement) {
+                formRowElement.classList.remove(floatLabelClass);
             }
         }
     });
@@ -52,5 +47,25 @@ export function setUpFloatingLabels() {
     window.document.body.dataset.setUpFloatingLabels = 'true';
     // Just a quicker way of finding out if setup has already ran.
     ranSetup = true;
+}
+/**
+ * Recurses over the given child's parent elements until a parent is found that has the given class name. It returns the
+ * parent with that class name or null if no parent has that class name.
+ *
+ * @param child
+ * @param className
+ */
+function getParentByClassName(child, className) {
+    var em = child;
+    while (true) {
+        var parent_1 = em.parentElement;
+        if (!parent_1) {
+            return null;
+        }
+        else if (parent_1.classList.contains(className)) {
+            return parent_1;
+        }
+        em = parent_1;
+    }
 }
 //# sourceMappingURL=index.js.map
