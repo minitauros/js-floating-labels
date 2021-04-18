@@ -1,5 +1,7 @@
-const floatLabelClass = 'float-label';
 let ranSetup = false;
+
+const formRowClass = 'form-row';
+export const floatLabelClass = 'float-label';
 
 /**
  * Sets up "floating labels", i.e. when a user focuses an input field a CSS class will be added indicating the label
@@ -31,12 +33,10 @@ export function setUpFloatingLabels(): void {
         || e.target.constructor === HTMLTextAreaElement
       )
     ) {
-      const target = e.target as HTMLInputElement;
-      const parent = target.parentElement;
-      if (!parent) {
-        return;
+      const formRowElement = getParentByClassName(e.target as HTMLInputElement, formRowClass);
+      if (formRowElement) {
+        formRowElement.classList.add(floatLabelClass);
       }
-      parent.classList.add(floatLabelClass);
     }
   });
 
@@ -49,14 +49,9 @@ export function setUpFloatingLabels(): void {
         || e.target.constructor === HTMLTextAreaElement
       )
     ) {
-      const target = e.target as HTMLInputElement;
-
-      if (target.value === '') {
-        const parent = target.parentElement;
-        if (!parent) {
-          return;
-        }
-        parent.classList.remove(floatLabelClass);
+      const formRowElement = getParentByClassName(e.target as HTMLInputElement, formRowClass);
+      if (formRowElement) {
+        formRowElement.classList.remove(floatLabelClass);
       }
     }
   });
@@ -68,3 +63,22 @@ export function setUpFloatingLabels(): void {
   ranSetup = true;
 }
 
+/**
+ * Recurses over the given child's parent elements until a parent is found that has the given class name. It returns the
+ * parent with that class name or null if no parent has that class name.
+ *
+ * @param child
+ * @param className
+ */
+function getParentByClassName(child: HTMLElement, className: string): HTMLElement | null {
+  let em = child;
+  while (true) {
+    const parent = em.parentElement;
+    if (!parent) {
+      return null;
+    } else if (parent.classList.contains(className)) {
+      return parent;
+    }
+    em = parent;
+  }
+}
