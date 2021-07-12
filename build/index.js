@@ -22,31 +22,55 @@ export function setUpFloatingLabels() {
         return;
     }
     window.addEventListener('focusin', function (e) {
-        if (e.target
-            && (e.target.constructor === HTMLInputElement
-                || e.target.constructor === HTMLSelectElement
-                || e.target.constructor === HTMLTextAreaElement)) {
-            var formRowElement = getParentByClassName(e.target, formRowClass);
-            if (formRowElement) {
-                formRowElement.classList.add(floatLabelClass);
-            }
+        if (!canFloatLabel(e.target)) {
+            return;
+        }
+        var formRowElement = getParentByClassName(e.target, formRowClass);
+        if (formRowElement) {
+            formRowElement.classList.add(floatLabelClass);
         }
     });
     window.addEventListener('focusout', function (e) {
-        if (e.target
-            && (e.target.constructor === HTMLInputElement
-                || e.target.constructor === HTMLSelectElement
-                || e.target.constructor === HTMLTextAreaElement)) {
-            var formRowElement = getParentByClassName(e.target, formRowClass);
-            if (formRowElement) {
-                formRowElement.classList.remove(floatLabelClass);
-            }
+        if (!canFloatLabel(e.target)) {
+            return;
+        }
+        var value = getEventTargetValue(e.target);
+        if (value !== '') {
+            return;
+        }
+        var formRowElement = getParentByClassName(e.target, formRowClass);
+        if (formRowElement) {
+            formRowElement.classList.remove(floatLabelClass);
         }
     });
     // Prevent other similar setup scripts from adding the same event listeners.
     window.document.body.dataset.setUpFloatingLabels = 'true';
     // Just a quicker way of finding out if setup has already ran.
     ranSetup = true;
+}
+/**
+ * Returns true if we can or are supposed to float the label of the given event target (e.g. an input element).
+ */
+function canFloatLabel(target) {
+    return target !== null
+        && (target.constructor === HTMLInputElement
+            || target.constructor === HTMLSelectElement
+            || target.constructor === HTMLTextAreaElement);
+}
+/**
+ * Returns the value of the given event target (typically a focus or focusout event of an input element).
+ */
+function getEventTargetValue(target) {
+    switch (target.constructor) {
+        case HTMLInputElement:
+            return target.value;
+        case HTMLSelectElement:
+            return target.value;
+        case HTMLTextAreaElement:
+            return target.value;
+        default:
+            return '';
+    }
 }
 /**
  * Recurses over the given child's parent elements until a parent is found that has the given class name. It returns the

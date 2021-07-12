@@ -25,34 +25,29 @@ export function setUpFloatingLabels(): void {
   }
 
   window.addEventListener('focusin', (e: FocusEvent) => {
-    if (
-      e.target
-      && (
-        e.target.constructor === HTMLInputElement
-        || e.target.constructor === HTMLSelectElement
-        || e.target.constructor === HTMLTextAreaElement
-      )
-    ) {
-      const formRowElement = getParentByClassName(e.target as HTMLInputElement, formRowClass);
-      if (formRowElement) {
-        formRowElement.classList.add(floatLabelClass);
-      }
+    if (!canFloatLabel(e.target)) {
+      return;
+    }
+
+    const formRowElement = getParentByClassName(e.target as HTMLInputElement, formRowClass);
+    if (formRowElement) {
+      formRowElement.classList.add(floatLabelClass);
     }
   });
 
   window.addEventListener('focusout', (e: FocusEvent) => {
-    if (
-      e.target
-      && (
-        e.target.constructor === HTMLInputElement
-        || e.target.constructor === HTMLSelectElement
-        || e.target.constructor === HTMLTextAreaElement
-      )
-    ) {
-      const formRowElement = getParentByClassName(e.target as HTMLInputElement, formRowClass);
-      if (formRowElement) {
-        formRowElement.classList.remove(floatLabelClass);
-      }
+    if (!canFloatLabel(e.target)) {
+      return;
+    }
+
+    const value = getEventTargetValue(e.target as EventTarget);
+    if (value !== '') {
+      return;
+    }
+
+    const formRowElement = getParentByClassName(e.target as HTMLInputElement, formRowClass);
+    if (formRowElement) {
+      formRowElement.classList.remove(floatLabelClass);
     }
   });
 
@@ -61,6 +56,34 @@ export function setUpFloatingLabels(): void {
 
   // Just a quicker way of finding out if setup has already ran.
   ranSetup = true;
+}
+
+/**
+ * Returns true if we can or are supposed to float the label of the given event target (e.g. an input element).
+ */
+function canFloatLabel(target: EventTarget | null): boolean {
+  return target !== null
+    && (
+      target.constructor === HTMLInputElement
+      || target.constructor === HTMLSelectElement
+      || target.constructor === HTMLTextAreaElement
+    );
+}
+
+/**
+ * Returns the value of the given event target (typically a focus or focusout event of an input element).
+ */
+function getEventTargetValue(target: EventTarget): string {
+  switch (target.constructor) {
+    case HTMLInputElement:
+      return (target as HTMLInputElement).value;
+    case HTMLSelectElement:
+      return (target as HTMLSelectElement).value;
+    case HTMLTextAreaElement:
+      return (target as HTMLTextAreaElement).value;
+    default:
+      return '';
+  }
 }
 
 /**
