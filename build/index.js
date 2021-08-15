@@ -53,7 +53,9 @@ export function setUpFloatingLabels() {
  */
 function canFloatLabel(target) {
     return target !== null
-        && (target.constructor === HTMLInputElement
+        && ((target.constructor === HTMLInputElement
+            && target.type !== 'checkbox'
+            && target.type !== 'radio')
             || target.constructor === HTMLSelectElement
             || target.constructor === HTMLTextAreaElement);
 }

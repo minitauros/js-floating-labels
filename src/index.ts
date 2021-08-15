@@ -64,7 +64,11 @@ export function setUpFloatingLabels(): void {
 function canFloatLabel(target: EventTarget | null): boolean {
   return target !== null
     && (
-      target.constructor === HTMLInputElement
+      (
+        target.constructor === HTMLInputElement
+        && (target as HTMLInputElement).type !== 'checkbox'
+        && (target as HTMLInputElement).type !== 'radio'
+      )
       || target.constructor === HTMLSelectElement
       || target.constructor === HTMLTextAreaElement
     );
