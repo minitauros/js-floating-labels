@@ -1,6 +1,6 @@
 {
   "name": "floating-labels",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add float-label class to input elements if applicable",
   "author": "Minitauros (Stephan Grasmeijer)",
   "license": "MIT",
