@@ -1,6 +1,6 @@
-var ranSetup = false;
-var formRowClass = 'form-row';
-export var floatLabelClass = 'float-label';
+let ranSetup = false;
+const formRowClass = 'form-row';
+export const floatLabelClass = 'float-label';
 /**
  * Sets up "floating labels", i.e. when a user focuses an input field a CSS class will be added indicating the label
  * may float.
@@ -21,24 +21,24 @@ export function setUpFloatingLabels() {
         ranSetup = true;
         return;
     }
-    window.addEventListener('focusin', function (e) {
+    window.addEventListener('focusin', (e) => {
         if (!canFloatLabel(e.target)) {
             return;
         }
-        var formRowElement = getParentByClassName(e.target, formRowClass);
+        const formRowElement = getParentByClassName(e.target, formRowClass);
         if (formRowElement) {
             formRowElement.classList.add(floatLabelClass);
         }
     });
-    window.addEventListener('focusout', function (e) {
+    window.addEventListener('focusout', (e) => {
         if (!canFloatLabel(e.target)) {
             return;
         }
-        var value = getEventTargetValue(e.target);
+        const value = getEventTargetValue(e.target);
         if (value !== '') {
             return;
         }
-        var formRowElement = getParentByClassName(e.target, formRowClass);
+        const formRowElement = getParentByClassName(e.target, formRowClass);
         if (formRowElement) {
             formRowElement.classList.remove(floatLabelClass);
         }
@@ -82,16 +82,16 @@ function getEventTargetValue(target) {
  * @param className
  */
 function getParentByClassName(child, className) {
-    var em = child;
+    let em = child;
     while (true) {
-        var parent_1 = em.parentElement;
-        if (!parent_1) {
+        const parent = em.parentElement;
+        if (!parent) {
             return null;
         }
-        else if (parent_1.classList.contains(className)) {
-            return parent_1;
+        else if (parent.classList.contains(className)) {
+            return parent;
         }
-        em = parent_1;
+        em = parent;
     }
 }
 //# sourceMappingURL=index.js.map
